@@ -1,0 +1,273 @@
+\documentclass{article}
+
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\usepackage{graphicx}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{Rozwiązywanie układu równań liniowych Ax = b, gdzie A(n x n) jest macierzą symetryczną dodatnio określoną postaci}
+\author{Kornel Tłaczała}
+
+\begin{document}
+\maketitle
+
+\vspace{0.2cm}
+\begin{center}
+\textbf{\large Projekt nr 2} \\
+\end{center}
+
+\section{Opis metody}
+    \subsection*{Twierdzenie Sylvestera (Kryterium Sylvestera)}
+
+Niech \( A \in \mathbb{R}^{n \times n} \) będzie macierzą symetryczną. Macierz \( A \) jest dodatnio określona wtedy i tylko wtedy, gdy wszystkie jej wiodące minory główne są dodatnie, tj.
+\[ \omega_k = \det
+\begin{bmatrix}
+a_{11} & \dots & a_{1k} \\
+\vdots & \ddots & \vdots \\
+a_{k1} & \dots & a_{kk}
+\end{bmatrix}
+> 0 \quad \text{dla } k = 1, \ldots, n. \]
+
+\vspace{10pt}
+Rozkład Cholesky’ego-Banachiewicza jest jednym z wielu stosowanych w praktyce rozkładów macierzy na czynniki. We wszystkich rozkładach macierzy chodzi o to, żeby daną
+macierz zapisać jako iloczyn (dwóch lub więcej) macierzy o określonej strukturze i własnościach. W przypadku rozkładu Cholesky’ego-Banachiewicza macierz wyjściowa jest
+zapisywana jako iloczyn macierzy trójkątnej (dolnej) i jej transpozycji. Warunki istnienia
+takiego rozkładu precyzuje następujące twierdzenie.
+
+
+\subsection*{Twierdzenie Cholesky'ego-Banachiewicza}
+
+Jeśli \( A \in \mathbb{R}^{n \times n} \) jest macierzą symetryczną i dodatnio określoną, to istnieje dokładnie jedna macierz trójkątna dolna \( L \) z dodatnimi elementami na głównej przekątnej, taka że \( A = LL^T \). Rozkład \( A = LL^T \) nazywamy rozkładem Cholesky'ego-Banachiewicza macierzy \( A \).
+
+\subsection*{Algorytm wyznaczania rozkładu Cholesky'ego-Banachiewicza}
+
+Algorytm opiera się na równaniu \( A = LL^T \), gdzie
+\[ A =
+\begin{bmatrix}
+a_{11} & a_{12} & \dots & a_{1n} \\
+a_{12} & a_{22} & \dots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{1n} & a_{2n} & \dots & a_{nn}
+\end{bmatrix}
+\quad \text{oraz} \quad
+L =
+\begin{bmatrix}
+l_{11} & 0 & \dots & 0 \\
+l_{21} & l_{22} & \dots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+l_{n1} & l_{n2} & \dots & l_{nn}
+\end{bmatrix}
+\]
+
+Po rozpisaniu iloczynu i porównaniu odpowiadających sobie elementów macierzy \( A \) i \( LL^T \), otrzymujemy zależności, z których wyznaczamy elementy macierzy \( L \).
+
+Dla przypadku \( A \in \mathbb{R}^{3 \times 3} \), otrzymujemy:
+
+\[ A =
+\begin{bmatrix}
+a_{11} & a_{12} & a_{13} \\
+a_{21} & a_{22} & a_{23} \\
+a_{31} & a_{32} & a_{33}
+\end{bmatrix}
+=
+\begin{bmatrix}
+l_{11}^2 & l_{11}l_{21} & l_{11}l_{31} \\
+l_{11}l_{21} & l_{21}^2 + l_{22}^2 & l_{21}l_{31} + l_{22}l_{32} \\
+l_{11}l_{31} & l_{21}l_{31} + l_{22}l_{32} & l_{31}^2 + l_{32}^2 + l_{33}^2
+\end{bmatrix}
+\]
+
+Stąd po kolei wyznaczamy \( l_{11} \), \( l_{21} \), itd.
+
+\subsection*{Dlaczego korzystamy z takiego rozkładu?}
+
+Jednym z prostszych do rozwiązania układów równań liniowych jest układ z macierzą
+trójkątną (górną lub dolną).
+Przyjmując, że \( A \) jest macierzą trójkątną górną, tj.
+\[ A =
+\begin{bmatrix}
+a_{11} & a_{12} & \dots & a_{1n} \\
+0 & a_{22} & \dots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \dots & a_{nn}
+\end{bmatrix}
+, \]
+
+Układ równań można zapisać jako:
+\begin{align*}
+a_{11}x_1 + a_{12}x_2 + \dots + a_{1n}x_n &= b_1 \\
+a_{22}x_2 + \dots + a_{2n}x_n &= b_2 \\
+&\vdots \\
+a_{nn}x_n &= b_n.
+\end{align*}
+
+Rozwiązanie takiego układu równań nie należy do skomplikowanych. Z ostatniego równania obliczamy xn, wstawiamy do przedostatniego, obliczamy xn−1, następnie obie wartości (xn i
+xn−1) wstawiamy do poprzedniego równania, itd.
+
+\subsection*{Cel}
+W moim projekcie zakładamy, że macierz $A$ jest hermitowska, dodatnio określona i ma postać blokową:
+\[ A = \begin{bmatrix} A_{11} & A_{12} \\ A_{12}^H & A_{22} \end{bmatrix} \]
+gdzie $A_{ij}$ ($p \times p$) i $n = 2p$.
+
+Celem jest zmodyfikowanie rozkładu Cholesky'ego-Banachiewicza, w taki sposób aby dobrze obsługiwał dobrze liczby zespolone. Rozbicie macierzy na bloki spowoduje natomiast przyspieszenie działania, albowiem rozkład Cholewskiego bedziemy wykonywać na macierzach mniejszych rozmiarów.
+
+\section{Opis programu obliczeniowego}
+
+Do wykonania niezbędnych obliczeń zaimplementowałem poniższe funkcje:
+
+\vspace{12pt}
+\textbf{\large isMatrixPositiveDefinite(A)} \\
+Sprawdza czy podana macierz A jest hermitowska i dodatnio określona.
+
+\vspace{6pt}
+\textbf{\large cholevsky(A)} \\
+Zwraca macierz L (dolną trójkątną) obliczaną za pomocą rozkładu Cholevsky'ego-Banachiewicza zmodyfikowanego tak aby działał dla liczb zespolonych
+
+\vspace{6pt}
+\textbf{\large blockCholeskyDecomposition(A)} \\
+Wylicza macierz dolną trójkątną L na podstawie blokowości macierzy A (zgodnie z założeniami projektowymi)
+
+\vspace{6pt}
+\textbf{\large forwardSubstitution(L, b)} \\
+Przyjmuje macierz L oraz wektor wyrazów wolnych b, 
+rozwiązuje układ równań Ly = b i zwraca y;
+
+\vspace{6pt}
+\textbf{\large backwardSubstitution($L^\dagger$, $Y$)} \\
+Przyjmuje macierz $L^\dagger$ oraz wektor wyrazów wolnych $Y$, rozwiązując układ równań $Lx = Y$, i zwraca wektor $x$.
+
+\vspace{6pt}
+\textbf{\large Solver(L, b)} \\
+Na wejściu przyjmuje macierz dolną trójkątną L oraz wektor wyrazów woknych b. Przy użyciu funkcji: forwardSubstitution i backwardSubstitution wylicza x, z układu równań Ax = b
+
+
+\vspace{12pt} 
+
+\section{Przykłady Obliczeniowe}
+\vspace{12pt}
+\textbf{\large Przedstawienie i krótka analiza przykładowych układów razem z analizą błędów:} \\
+\subsection*{Przykład 1}
+\vspace{12pt}
+\[\begin{bmatrix}
+14.0000 + 0.0000i & 0.0000 - 1.0000i & 2.0000 + 0.0000i & 1.0000 + 0.0000i \\
+0.0000 + 1.0000i & 10.0000 + 0.0000i & 1.0000 + 0.0000i & 1.0000 + 0.0000i \\
+2.0000 + 0.0000i & 1.0000 + 0.0000i & 24.0000 + 0.0000i & 1.0000 + 0.0000i \\
+1.0000 + 0.0000i & 1.0000 + 0.0000i & 1.0000 + 0.0000i & 2.0000 + 0.0000i \\
+\end{bmatrix} * x = 
+\begin{bmatrix} 1 \\ 2 \\ 3 \\ 4 \\
+\end{bmatrix}
+ \]
+
+\begin{figure}[hbt!]
+  \centering
+    \includegraphics[width=0.8\linewidth]{p1.png}
+    \caption{$A1 \cdot x = b$}
+    \label{fig:example}
+\end{figure}
+
+
+\subsection*{Przykład 2}
+\vspace{12pt}
+\[\begin{bmatrix}
+    2 & 1 + 2i & 0 & 0 \\
+    1 - 2i & 5 & 3i & 0 \\
+    0 & -3i & 4 & 2 + 4i \\
+    0 & 0 & -2 - 4i & 6\\
+\end{bmatrix} * x = 
+\begin{bmatrix} 2\\ 3-i \\ 4 \\ 2 \\
+\end{bmatrix}
+ \]
+
+\begin{figure}[hbt!]
+  \centering
+    \includegraphics[width=0.8\linewidth]{p2.png}
+    \caption{$A2 \cdot x = b$}
+    \label{fig:example}
+\end{figure}
+
+Przykład działania programu w przypadku podania macierzy A niezgodnej z założeniami projektowymi
+
+\subsection*{Przykład 3}
+\vspace{12pt}
+\[\begin{bmatrix}
+    5 & 3 \\
+    3 & 7 \\
+\end{bmatrix} * x = 
+\begin{bmatrix} 2 \\ 4 \\
+\end{bmatrix}
+ \]
+
+\begin{figure}[hbt!]
+  \centering
+    \includegraphics[width=0.8\linewidth]{p3.png}
+    \caption{$A3 \cdot x = b$}
+    \label{fig:example}
+\end{figure}
+
+Przykład działania programu dla macierzy liczb rzeczywistych
+
+\subsection*{Przykład 4}
+\vspace{12pt}
+\[\begin{bmatrix}
+    2 & -i & 1 & 0 & 0 & 0 \\
+    i & 3 & 0 & 0 & 0 & 0 \\
+    1 & 0 & 4 & -i & 0 & 0 \\
+    0 & 0 & i & 5 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 6 & 1 \\
+    0 & 0 & 0 & 0 & 1 & 7
+\end{bmatrix} * x = 
+\begin{bmatrix} 1 \\ -i \\ 2 \\ 5 \\ 2-i \\ 4 \\
+\end{bmatrix}
+ \]
+
+\begin{figure}[hbt!]
+  \centering
+    \includegraphics[width=0.8\linewidth]{p4.png}
+    \caption{$A4 \cdot x = b$}
+    \label{fig:example}
+\end{figure}
+
+A tutaj przykład dla którego błędy nie są aż tak małe.
+
+\subsection*{Przykład 5}
+\vspace{12pt}
+
+\[\begin{bmatrix}
+    2 & i & 0.5 & 0 & 0 & 0 & 2i & 0 \\
+    -1i & 3 & 0 & 0 & -3i & 0 & i & 0 \\
+    0.5 & 0 & 4 & i & 0 & 2i & 0 & 2 \\
+    0 & 0 & -1i & 5 & 0 & -1+i & 0 & 0 \\
+    0 & +3i & 0 & 0 & 6 & 1i & 0 & -3i \\
+    0 & 0 & -2i & -1-i & -1i & 7 & 0 & -4i \\
+    -2i & -i & 0 & 0 & 0 & 0 & 8 & 1i \\
+    0 & 0 & 2 & 0 & 3i & 4i & -1i & 9
+\end{bmatrix}
+ * x = 
+\begin{bmatrix} 1 \\ 2 \\ 3 \\ 4 \\ 5 \\ 6 \\ 7 \\ 8 \\
+\end{bmatrix}
+ \]
+
+\begin{figure}[hbt!]
+  \centering
+    \includegraphics[width=0.8\linewidth]{p55.png}
+    \caption{$A5 \cdot x = b$}
+    \label{fig:example}
+\end{figure}
+
+Przykład dla macierzy większych rozmiarów (8x8).
+
+\vspace{100pt}
+
+\subsection{Konkluzje}
+\vspace{6pt}
+Są macierze dla których metoda nie jest bardzo dokładna, ale może być bardzo użyteczna w przypadku gdy zajmowania się ogromnymi układami równań, albowiem koszt wykonania dwóch rozkładów Cholevsky'ego dla macierzy o wymiarach n/4 x n/4 jest znacznie mniejszy niz iterowanie przez macierz n x n w przypadku rozkładu Cholevsky'ego dla dużych n. Rozkład macierzy na dwie trójkątne może również ułatwić liczenie wyznacznika macierzy bazowej.
+
+
+\end{document}
