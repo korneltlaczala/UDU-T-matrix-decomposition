@@ -2,11 +2,8 @@ clc
 
 basicVector = [8 -1 21.37 13]';
 
-matrix = getExample(1);
-b = matrix * basicVector;
-
-myResult = linsolveUDUT(matrix, b);
-matlabResult = linsolve(matrix, b);
-
-display(myResult')
-display(matlabResult')
+p = 100;
+variance = 1;
+matrix = getMatrix(p, variance);
+vector = randn(2*p, 1).*100;
+testFor(matrix, vector, p, variance)
