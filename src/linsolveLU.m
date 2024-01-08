@@ -1,7 +1,7 @@
-function [x] = linsolveLU(A, b)
+function [x] = linsolveLU(A, B)
 
     [L, U] = LUdecomposition(A);
 
-    y = linsolveForLower(L, b);
-    x = linsolveForUpper(U, y);
+    Y = linsolveForLower(L, B);
+    x = linsolveForUpper(U, Y);
 end

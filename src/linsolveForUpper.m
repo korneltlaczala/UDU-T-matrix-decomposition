@@ -1,9 +1,8 @@
-function [x] = linsolveForUpper(U, b)
-    
-    n = length(b);
-    x = zeros(n, 1);
+function [x] = linsolveForUpper(U, B)
+    [m, n] = size(B);
+    x = zeros(m, n);
 
-    for i = n:-1:1
-        x(i) = (b(i) - U(i, i+1:n) * x(i+1:n)) / U(i,i);
+    for i = m:-1:1
+        x(i, :) = (B(i, :) - U(i, i+1:end) * x(i+1:end, :)) / U(i,i);
     end
 end

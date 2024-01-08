@@ -1,9 +1,8 @@
-function [x] = linsolveForLower(L, b)
+function [x] = linsolveForLower(L, B)
+    [m, n] = size(B);
+    x = zeros(m, n);
 
-    n = length(b);
-    x = zeros(n, 1);
-
-    for i = 1:n
-        x(i) = (b(i) - L(i, 1:i-1) * x(1:i-1)) / L(i, i);
+    for i = 1:m
+        x(i, :) = (B(i, :) - L(i, 1:i-1) * x(1:i-1, :)) / L(i, i);
     end
 end

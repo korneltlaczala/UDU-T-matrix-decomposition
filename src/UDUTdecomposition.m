@@ -9,7 +9,7 @@ function [U, D] = UDUTdecomposition(A)
     I = eye(p);
     N = zeros(p,p);
     D22 = A22;
-    U12 = A12/D22;
+    U12 = linsolveLU(D22, A12')';
     D11 = A11 - U12*D22*U12';
 
     U = [I, U12; N, I];
