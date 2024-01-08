@@ -5,25 +5,8 @@ basicVector = [8 -1 21.37 13]';
 matrix = getExample(1);
 b = matrix * basicVector;
 
-tic
-for i = 1:100000
-    myResult = linsolveUDUT(matrix, b);
-end
-myTime = toc;
-
-tic
-for i = 1:100000
-    matlabResult = linsolve(matrix, b);
-end
-matlabTime = toc;
+myResult = linsolveUDUT(matrix, b);
+matlabResult = linsolve(matrix, b);
 
 display(myResult')
 display(matlabResult')
-
-fprintf("My time: ")
-disp(myTime)
-
-fprintf("Matlab time: ")
-disp(matlabTime)
-
-
