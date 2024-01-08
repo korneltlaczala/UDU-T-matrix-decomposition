@@ -3,7 +3,7 @@
 \usepackage[polish]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{amsmath, amssymb}
+\usepackage{amsmath, amssymb, subcaption}
 
 \usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
 \usepackage{graphicx}
@@ -158,22 +158,173 @@ Możemy więc rozbić macierz \(D_{ii}\) na iloczyn \(LU\) otrzymując \(L_{Dii}
 \]
 \vspace{10pt}
 \section{Opis programu obliczeniowego}
-W celu implementacji opisanej metody wykorzystałem kilka przedstawionych poniżej funkcji:
-    \subsection*{splitZ(z)}
-Przyjmuje wektor \(z\), zwraca 2 mniejsze wektory \(z_1\) oraz \(z_2\). Przydatna przy obliczaniu \(y\).
-    \subsection*{splitD(D)}
-Przyjmuje macierz \(D\), zwraca 2 mniejsze macierze \(D_{11}\) oraz \(D_{22}\). Przydatna przy obliczaniu \(y\).
-    \subsection*{LUdecomposition(A)}
-Przyjmuje macierz \(A\), zwraca macierze \(L\) oraz \(U\), takie, że \(LU = A\). Funkcja wykorzystuje rozkład Doolittle'a.
-    \subsection*{linsolveForUpper(U, B)}
-Przyjmuje macierz górną trójkątną\(U\) oraz macierz lub wektor \(B\), zwraca wektor lub macierz \(X\) taki, że \(UX = B\). Wykorzystuje charakterystykę macierzy górnej trójkątnej, by przyśpieszyć rozwiązywanie układu równań.
-    \subsection*{linsolveForLower(L, B)}
-Przyjmuje macierz dolną trójkątną\(L\) oraz macierz lub wektor \(B\), zwraca wektor lub macierz \(X\) taki, że \(LX = B\). Wykorzystuje charakterystykę macierzy dolnej trójkątnej, by przyśpieszyć rozwiązywanie układu równań.
-    \subsection*{linsolveLU(A, B)}
-Przyjmuje macierz\(A\) oraz macierz lub wektor \(B\), zwraca wektor lub macierz \(X\) taki, że \(AX = B\). Wykorzystuje LUdecomposition aby otrzymać potrzebne macierze \(L\) oraz \(U\) a następnie wykorzystuje linsolveForLower() oraz linsolveForUpper() by policzyć X.
-    \subsection*{UDUTdecomposition(A)}
-Przyjmuje macierz\(A\), zwraca macierze \(U\) oraz \(D\) takie, że \(UDU^T = A\). Wykorzystuje linsolveLU() aby otrzymać potrzebną macierz \(U_{12}\).
-    \subsection*{linsolveUDUT(A, b)}
-Przyjmuje macierz\(A\) oraz wektor \(b\), zwraca wektor \(x\), takie, że \(Ax = b\). Wykorzystuje UDUTdecomposition(), linsolveForUpper(), linsolveForLower(), splitZ(), splitD() oraz linsolveLU().
+W celu implementacji opisanej metody wykorzystałem kilka przedstawionych poniżej funkcji.
+Wszystkie zostały zwektoryzowane w celu zwiększenia wydajności wykonania.
+    \subsection*{Funkcje obliczeniowe}
+        \subsubsection*{splitZ(z)}
+        Przyjmuje wektor \(z\), zwraca 2 mniejsze wektory \(z_1\) oraz \(z_2\). Przydatna przy obliczaniu \(y\).
+        \subsubsection*{splitD(D)}
+        Przyjmuje macierz \(D\), zwraca 2 mniejsze macierze \(D_{11}\) oraz \(D_{22}\). Przydatna przy obliczaniu \(y\).
+        \subsubsection*{LUdecomposition(A)}
+        Przyjmuje macierz \(A\), zwraca macierze \(L\) oraz \(U\), takie, że \(LU = A\). Funkcja wykorzystuje rozkład Doolittle'a.
+        \subsubsection*{linsolveForUpper(U, B)}
+        Przyjmuje macierz górną trójkątną\(U\) oraz macierz lub wektor \(B\), zwraca wektor lub macierz \(X\) taki, że \(UX = B\). Wykorzystuje charakterystykę macierzy górnej trójkątnej, by przyśpieszyć rozwiązywanie układu równań.
+        \subsubsection*{linsolveForLower(L, B)}
+        Przyjmuje macierz dolną trójkątną\(L\) oraz macierz lub wektor \(B\), zwraca wektor lub macierz \(X\) taki, że \(LX = B\). Wykorzystuje charakterystykę macierzy dolnej trójkątnej, by przyśpieszyć rozwiązywanie układu równań.
+        \subsubsection*{linsolveLU(A, B)}
+        Przyjmuje macierz\(A\) oraz macierz lub wektor \(B\), zwraca wektor lub macierz \(X\) taki, że \(AX = B\). Wykorzystuje LUdecomposition aby otrzymać potrzebne macierze \(L\) oraz \(U\) a następnie wykorzystuje linsolveForLower() oraz linsolveForUpper() by policzyć X.
+        \subsubsection*{UDUTdecomposition(A)}
+        Przyjmuje macierz\(A\), zwraca macierze \(U\) oraz \(D\) takie, że \(UDU^T = A\). Wykorzystuje linsolveLU() aby otrzymać potrzebną macierz \(U_{12}\).
+        \subsubsection*{linsolveUDUT(A, b)}
+        Przyjmuje macierz\(A\) oraz wektor \(b\), zwraca wektor \(x\), takie, że \(Ax = b\). Wykorzystuje UDUTdecomposition(), linsolveForUpper(), linsolveForLower(), splitZ(), splitD() oraz linsolveLU().
+    \subsection*{Funkcje testujące}
+        \subsubsection*{getMatrix(p, variance)}
+        Przyjmuje wartości \(p\), oraz \(variance\). Tworzy macierz \((2*p \times 2*p)\) wykorzystując funkcję randn(). Mnoży tą macierz przez \(variance\) i ją zwraca.
+        \subsubsection*{testfor(p, variance)}
+        Przyjmuje wartości \(p\), oraz \(variance\). Tworzy macierz \(A(2*p \times 2*p)\) wykorzystując funkcję getMatrix(). Tworzy wektor \(b(2*p)\). Liczy \(Ax = b\) wykorzystując funkcję linsolveUDUT() oraz wbudowaną funcję linsolve(). Porównuje wyniki i czas wykonania. Rezultaty wypisuje w konsoli.
+
+\newpage
+\section{Przykłady obliczeniowe}
+\vspace{12pt}
+    \subsection*{Przykład 1}
+    \vspace{12pt}
+    \begin{figure}[hbt!]
+        \centering
+
+        \begin{subfigure}{0.45\linewidth}
+            \includegraphics[width=\linewidth]{img/fig1.png}
+            \caption{Caption for the first figure}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.45\linewidth}
+            \includegraphics[width=\linewidth]{img/mat1.png}
+            \caption{Caption for the second figure}
+        \end{subfigure}
+
+        \caption{$A1 \cdot x = b$}
+        \label{fig:example1}
+    \end{figure}
+    
+    \newpage
+    \subsection*{Przykład 2}
+    \vspace{12pt}
+    \begin{figure}[hbt!]
+        \centering
+
+        \begin{subfigure}{0.45\linewidth}
+            \includegraphics[width=\linewidth]{img/fig2.png}
+            \caption{Caption for the first figure}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.45\linewidth}
+            \includegraphics[width=\linewidth]{img/mat2.png}
+            \caption{Caption for the second figure}
+        \end{subfigure}
+
+        \caption{$A1 \cdot x = b$}
+        \label{fig:example2}
+    \end{figure}
+    
+    \newpage
+    \subsection*{Przykład 3}
+    \vspace{12pt}
+    \begin{figure}[hbt!]
+        \centering
+
+        \begin{subfigure}{0.45\linewidth}
+            \includegraphics[width=\linewidth]{img/fig3.png}
+            \caption{Caption for the first figure}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.45\linewidth}
+            \includegraphics[width=\linewidth]{img/mat3.png}
+            \caption{Caption for the second figure}
+        \end{subfigure}
+
+        \caption{$A1 \cdot x = b$}
+        \label{fig:example3}
+    \end{figure}
+    
+    \newpage
+    \subsection*{Przykład 4}
+    \vspace{12pt}
+    \begin{figure}[hbt!]
+        \centering
+
+        \begin{subfigure}{0.45\linewidth}
+            \includegraphics[width=\linewidth]{img/fig4.png}
+            \caption{Caption for the first figure}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.45\linewidth}
+            \includegraphics[width=\linewidth]{img/mat4.png}
+            \caption{Caption for the second figure}
+        \end{subfigure}
+
+        \caption{$A1 \cdot x = b$}
+        \label{fig:example4}
+    \end{figure}
+    
+    \newpage
+    \subsection*{Przykład 5}
+    \vspace{12pt}
+    \begin{figure}[hbt!]
+        \centering
+
+        \begin{subfigure}{0.45\linewidth}
+            \includegraphics[width=\linewidth]{img/fig5.png}
+            \caption{Caption for the first figure}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.45\linewidth}
+            \includegraphics[width=\linewidth]{img/mat5.png}
+            \caption{Caption for the second figure}
+        \end{subfigure}
+
+        \caption{$A1 \cdot x = b$}
+        \label{fig:example5}
+    \end{figure}
+    
+    \newpage
+    \subsection*{Przykład 6}
+    \vspace{12pt}
+    \begin{figure}[hbt!]
+        \centering
+
+        \begin{subfigure}{0.45\linewidth}
+            \includegraphics[width=\linewidth]{img/fig6.png}
+            \caption{Caption for the first figure}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.45\linewidth}
+            \includegraphics[width=\linewidth]{img/mat6.png}
+            \caption{Caption for the second figure}
+        \end{subfigure}
+
+        \caption{$A1 \cdot x = b$}
+        \label{fig:example6}
+    \end{figure}
+    
+    \newpage
+    \subsection*{Przykład 7}
+    \vspace{12pt}
+    \begin{figure}[hbt!]
+        \centering
+
+        \begin{subfigure}{0.45\linewidth}
+            \includegraphics[width=\linewidth]{img/fig7.png}
+            \caption{Caption for the first figure}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.45\linewidth}
+            \includegraphics[width=\linewidth]{img/mat7.png}
+            \caption{Caption for the second figure}
+        \end{subfigure}
+
+        \caption{$A1 \cdot x = b$}
+        \label{fig:example7}
+    \end{figure}
+    
+    \newpage
 \end{document}
 
