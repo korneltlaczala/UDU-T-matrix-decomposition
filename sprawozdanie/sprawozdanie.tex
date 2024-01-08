@@ -3,7 +3,7 @@
 \usepackage[polish]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{amsmath}
+\usepackage{amsmath, amssymb}
 
 \usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
 \usepackage{graphicx}
@@ -12,7 +12,7 @@
 \usepackage{graphicx}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 
-\title{Rozwiązywanie siema układu równań liniowych Ax = b, gdzie A(n x n) jest macierzą symetryczną dodatnio określoną}
+\title{Rozwiązywanie układu równań liniowych \(Ax = b\), gdzie \(A(n \times n)\) jest macierzą symetryczną dodatnio określoną}
 \author{Kornel Tłaczała}
 
 \begin{document}
@@ -23,8 +23,81 @@
 \textbf{\large Projekt nr 2} \\
 \end{center}
 
-\section{Opis metody}
-    \subsection*{Twierdzenie Sylvestera (Kryterium Sylvestera)}
+\section{Opis probelmu}
+    \subsection*{Cel projektu}
+Niech \(A \in \mathbb{R}^{n \times n} \) będzie dodatnio określoną macierzą symetryczną postaci:
+\[
+A=\begin{bmatrix}
+    A_{11} & A_{12}\\
+    A_{12}^T & A_{22}
+\end{bmatrix},
+\quad A_{ij} \in \mathbb{R}^{p \times p} \quad \wedge \quad n=2p
+\]
+Zadaniem jest rozwiązać układ równań liniowych \(Ax = b\) korzystając z blokowego rozkładu \(UDU^T\) macierzy \(A\) (\(A = UDU^T\)).
+    \subsection*{Metoda rozwiązania}
+Jeżeli przyjmiemy, że U jest macierzą o postaci:
+\[
+U=\begin{bmatrix}
+    I & U_{12}\\
+    0 & I
+\end{bmatrix}
+\]
+oraz D jest macierzą o postaci:
+\[
+D=\begin{bmatrix}
+    D_{11} & 0\\
+    0 & D_{22}
+\end{bmatrix}
+\]
+To otrzymujemy:
+
+\[
+A = UDU^T
+\]
+\vspace{5pt}
+\[
+\begin{bmatrix}
+    A_{11} & A_{12}\\
+    A_{12}^T & A_{22}
+\end{bmatrix}
+=
+\begin{bmatrix}
+    I & U_{12}\\
+    0 & I
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+    D_{11} & 0\\
+    0 & D_{22}
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+    I & 0\\
+    U_{12}^T & I
+\end{bmatrix}
+=
+\]
+\[
+=
+\begin{bmatrix}
+    D_{11} & U_{12} \cdot D_{22}\\
+    0 & D_{22}
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+    I & 0\\
+    U_{12}^T & I
+\end{bmatrix}
+=
+\]
+\[
+=
+\begin{bmatrix}
+    D_{11} + U_{12} \cdot D_{22} \cdot U_{12}^T & U_{12} \cdot D_{22}\\
+    D_{22} \cdot U_{12}^T & D_{22}
+\end{bmatrix}
+\]
+
 
 \vspace{10pt}
 
